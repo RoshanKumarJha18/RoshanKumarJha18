@@ -1,0 +1,43 @@
+name: Update Time in README
+
+on:
+  schedule:
+    - cron: "*/1 * * * *"  # Runs every 1 minute
+  workflow_dispatch:
+
+jobs:
+  update-time:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2  # Prevent long-running jobs
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Get complete git history
+
+      - name: Setup Git config
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Get current IST time
+        id: time
+        run: |
+          TIME=$(TZ='Asia/Kolkata' date "+%I:%M %p IST")
+          echo "time=$TIME" >> $GITHUB_OUTPUT
+          echo "Current IST time: $TIME"
+
+      - name: Update README
+        run: |
+          sed -i 's|🕒 Current time: `.*`|🕒 Current time: `'"${{ steps.time.outputs.time }}"'`|' README.md
+
+      - name: Commit and push changes
+        run: |
+          git add README.md
+          if ! git diff --cached --quiet; then
+            git commit -m "⏰ Update time to ${{ steps.time.outputs.time }} [skip ci]"
+            git push
+          else
+            echo "No changes to commit"
+          fi
