@@ -15,7 +15,7 @@
 </div>
 
 ---
-🕒 Current time: `12:08 PM IST`
+🕒 Current time: `03:23 PM IST`
 
 <img align="right" alt="Coding" width="360" src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif" />
 
